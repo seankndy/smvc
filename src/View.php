@@ -4,7 +4,7 @@ namespace SeanKndy\SMVC;
 class View
 {
     protected $vars;
-	static protected $globalVars = [];
+    static protected $globalVars = [];
     protected $response;
     protected $basePath;
     protected $renderHeaderFooter;
@@ -32,14 +32,14 @@ class View
         return $this->response;
     }
     
-	public static function assignGlobal($var, $val = '') {
-		self::$globalVars[$var] = $val;
-	}
-	
-	public static function getGlobal($var) {
-		return isset(self::$globalVars[$var]) ? $self::$globalVars[$var] : '';
-	}
-	
+    public static function assignGlobal($var, $val = '') {
+        self::$globalVars[$var] = $val;
+    }
+    
+    public static function getGlobal($var) {
+        return isset(self::$globalVars[$var]) ? $self::$globalVars[$var] : '';
+    }
+    
     public function assign($var, $val = '') {
         $this->vars[$var] = $val;
     }

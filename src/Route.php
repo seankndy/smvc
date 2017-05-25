@@ -9,7 +9,7 @@ class Route implements \Interop\Http\ServerMiddleware\DelegateInterface
 {
     protected $httpMethod;
     protected $routeString;
-	protected $defaultParams;
+    protected $defaultParams;
     protected $target;
     protected $middleware;
     protected $name;
@@ -19,45 +19,45 @@ class Route implements \Interop\Http\ServerMiddleware\DelegateInterface
         $this->setHttpMethod($httpMethod);
         $this->setRouteString($routeString);
         $this->setTarget($target);
-		$this->setDefaultParams($defaultParams);
+        $this->setDefaultParams($defaultParams);
         $this->setMiddleware($middleware);
         return $this;
     }
 
     public function matchRequest(ServerRequestInterface $request, &$params) {
-		// if method doesn't match, bail now
+        // if method doesn't match, bail now
         if ($this->httpMethod != 'ANY' && $this->httpMethod != strtoupper($request->getMethod())) {
             return false;
         }
-		
-		$routeArray = explode('/', $this->getRouteStringWithPrefix());
+        
+        $routeArray = explode('/', $this->getRouteStringWithPrefix());
         $pathString = trim($request->getUri()->getPath(), '/');
-		$pathArray = explode('/', $pathString);
-		
-		// compare $pathArray to $routeArray, item by item
-		foreach ($pathArray as $k => $pathItem) {
-		    if (!isset($routeArray[$k]))
-		        return false;
-		    $routeItem = $routeArray[$k];
-			$defaultValue = '';
-			if (preg_match('/^\{(\w+\??)\}$/', $routeItem, $m)) { // if variable (defined by word within curly brackets)
-				$variable = $m[1];
-				
-				if (substr($variable, -1) == '?') { // optional flag (?) specified
-					$variable = substr($variable, 0, -1); // hack '?' off end
-					$params[$variable] = (!$pathItem ? (isset($this->defaultParams[$variable]) ? $defaultValue : '') : $pathItem);
-				} else if (!$pathItem) {
-					return false;
-				} else {
-					$params[$variable] = $pathItem;
-				}
-			} else if ($routeItem == '*') { // wildcard
-				continue;
-			} else if ($routeItem != $pathItem) {
-				return false;
-			}
-		}
-		
+        $pathArray = explode('/', $pathString);
+        
+        // compare $pathArray to $routeArray, item by item
+        foreach ($pathArray as $k => $pathItem) {
+            if (!isset($routeArray[$k]))
+                return false;
+            $routeItem = $routeArray[$k];
+            $defaultValue = '';
+            if (preg_match('/^\{(\w+\??)\}$/', $routeItem, $m)) { // if variable (defined by word within curly brackets)
+                $variable = $m[1];
+                
+                if (substr($variable, -1) == '?') { // optional flag (?) specified
+                    $variable = substr($variable, 0, -1); // hack '?' off end
+                    $params[$variable] = (!$pathItem ? (isset($this->defaultParams[$variable]) ? $defaultValue : '') : $pathItem);
+                } else if (!$pathItem) {
+                    return false;
+                } else {
+                    $params[$variable] = $pathItem;
+                }
+            } else if ($routeItem == '*') { // wildcard
+                continue;
+            } else if ($routeItem != $pathItem) {
+                return false;
+            }
+        }
+        
         return true;
     }
 
@@ -71,14 +71,14 @@ class Route implements \Interop\Http\ServerMiddleware\DelegateInterface
             $response = $func($request, $params);
         } else
             throw new Exception("Could not run target because an invalid target was given.");
-		
-		// if response is a string, convert it to a Response object and assume normal
-		// operation, 200 OK
-		if (is_string($response)) {
-			$response = new Response(200, [], $response);
-		}
-		
-		return $response;
+        
+        // if response is a string, convert it to a Response object and assume normal
+        // operation, 200 OK
+        if (is_string($response)) {
+            $response = new Response(200, [], $response);
+        }
+        
+        return $response;
     }
     
     /*
@@ -116,7 +116,7 @@ class Route implements \Interop\Http\ServerMiddleware\DelegateInterface
     }
 
     public function setHttpMethod($httpMethod) {
-		$this->httpMethod = strtoupper(trim($httpMethod));
+        $this->httpMethod = strtoupper(trim($httpMethod));
         return $this;
     }
 
@@ -147,8 +147,8 @@ class Route implements \Interop\Http\ServerMiddleware\DelegateInterface
     }
 
     public function setDefaultParams(array $defaultParams) {
-		$this->defaultParams = $defaultParams;
-		return $this;
+        $this->defaultParams = $defaultParams;
+        return $this;
     }
 
     public function getMiddleware() {

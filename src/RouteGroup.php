@@ -5,9 +5,9 @@ class RouteGroup
 {
     use RouterTrait;
     
-	protected $routes;
-	protected $attributes;
-	
+    protected $routes;
+    protected $attributes;
+    
     public function __construct(array $attributes) {
         $this->setAttributes($attributes);
         $this->routes = [];

@@ -15,28 +15,28 @@ trait RouterTrait
         $this->routes[] = $route;
         return $route;
     }
-	
-	public function get($routeString, $target) {
-		return $this->route('GET', $routeString, $target);
-	}
+    
+    public function get($routeString, $target) {
+        return $this->route('GET', $routeString, $target);
+    }
 
-	public function post($routeString, $target) {
-		return $this->route('POST', $routeString, $target);
-	}
+    public function post($routeString, $target) {
+        return $this->route('POST', $routeString, $target);
+    }
 
-	public function delete($routeString, $target) {
-		return $this->route('DELETE', $routeString, $target);
-	}
-	
-	public function put($routeString, $target) {
-		return $this->route('PUT', $routeString, $target);
-	}
+    public function delete($routeString, $target) {
+        return $this->route('DELETE', $routeString, $target);
+    }
 
-	public function any($routeString, $target) {
-		return $this->route('ANY', $routeString, $target);
-	}
-	
-	public function getRoutes() {
+    public function put($routeString, $target) {
+        return $this->route('PUT', $routeString, $target);
+    }
+
+    public function any($routeString, $target) {
+        return $this->route('ANY', $routeString, $target);
+    }
+    
+    public function getRoutes() {
         return $this->routes;
     }
 }

@@ -24,7 +24,7 @@ class Application
     protected function routeRequest(ServerRequestInterface $request) {
         $this->request = $request;
 
-		// find matching route
+        // find matching route
         $route = null;
         $params = [];
         foreach ($this->routes as $r) {
@@ -37,9 +37,9 @@ class Application
             $this->handleNotFound($request);
             return;
         }
-		
-		$response = (new RouteDispatcher($this, $route, $params))->dispatch($request);
-		if ($response instanceof ResponseInterface) {
+        
+        $response = (new RouteDispatcher($this, $route, $params))->dispatch($request);
+        if ($response instanceof ResponseInterface) {
             $this->outputResponse($response);
         } else {
             $this->handleNoContent($request);
@@ -72,14 +72,14 @@ class Application
         $this->routes = array_merge($this->routes, $grp->getRoutes());
     }
     
-	// return url for route based on name and argument replacements
+    // return url for route based on name and argument replacements
     public function url($namedRoute, array $args = []) {
         foreach ($this->routes as $route) {
             if ($route->getName() == $namedRoute) {
                 return $route->generateUrl($args);
             }
         }
-		return false;
+        return false;
     }
 
     public function start() {
