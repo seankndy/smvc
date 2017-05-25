@@ -9,10 +9,22 @@ use Interop\Http\ServerMiddleware;
 
 class Application
 {
-    use RouterTrait;
+    use Routing\RouterTrait;
 
+    protected static $instance = null;
     protected $request;
     protected $config = [];
+    protected $dataValidators = [];
+
+    private function __construct() {
+    }
+
+    public static function instance() {
+        if (is_null(self::$instance)) {
+            self::$instance = new Application();
+        }
+        return self::$instance;
+    }
 
     public function config($key, $val = null) {
         if ($val === null && isset($this->config[$key])) {
@@ -38,7 +50,7 @@ class Application
             return;
         }
         
-        $response = (new RouteDispatcher($this, $route, $params))->dispatch($request);
+        $response = (new Routing\RouteDispatcher($route, $params))->dispatch($request);
         if ($response instanceof ResponseInterface) {
             $this->outputResponse($response);
         } else {
@@ -67,7 +79,7 @@ class Application
     }
     
     public function group(array $attributes, \Closure $callback) {
-        $grp = new RouteGroup($attributes);
+        $grp = new Routing\RouteGroup($attributes);
         $callback($grp);
         $this->routes = array_merge($this->routes, $grp->getRoutes());
     }
@@ -81,7 +93,21 @@ class Application
         }
         return false;
     }
-
+    
+    public function setDataValidators(array $validators) {
+        $this->dataValidators = $validators;
+        return $this;
+    }
+    
+    public function getDataValidator($name) {
+        foreach ($this->dataValidators as $validatorClass) {
+            if ($name == call_user_func($validatorClass . '::name')) {
+                return new $validatorClass();
+            }
+        }
+        return null;
+    }
+            
     public function start() {
         $this->routeRequest(ServerRequest::fromGlobals());
     }

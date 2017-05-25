@@ -9,13 +9,14 @@ class View
     protected $basePath;
     protected $renderHeaderFooter;
     
-    public function __construct(\Psr\Http\Message\ResponseInterface $response, $basePath = '../views/') {
+    public function __construct(\Psr\Http\Message\ResponseInterface $response, $basePath = '') {
         $this->response = $response;
-        if (substr($basePath, -1) != '/')
-            $basePath .= '/';
-        $this->basePath = $basePath;
+        $this->basePath = ($basePath ? $basePath : (Application::instance())->config('view.basePath'));
+        if (substr($this->basePath, -1) != '/')
+            $this->basePath .= '/';
         $this->renderHeaderFooter = true;
         $this->vars = [];
+        return $this;
     }
     
     public function render($viewName, $vars = []) {
@@ -42,6 +43,7 @@ class View
     
     public function assign($var, $val = '') {
         $this->vars[$var] = $val;
+        return $this;
     }
     
     public function get($var) {
@@ -58,6 +60,7 @@ class View
     
     public function setRenderHeaderFooter($renderHeaderFooter) {
         $this->renderHeaderFooter = $renderHeaderFooter;
+        return $this;
     }
     
     protected function renderFile($file, $vars = []) {

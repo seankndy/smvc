@@ -1,5 +1,5 @@
 <?php
-namespace SeanKndy\SMVC;
+namespace SeanKndy\SMVC\Routing;
 
 use Psr\Http\Message\ServerRequestInterface;
 use GuzzleHttp\Psr7\Response;

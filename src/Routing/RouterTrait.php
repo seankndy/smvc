@@ -1,5 +1,5 @@
 <?php
-namespace SeanKndy\SMVC;
+namespace SeanKndy\SMVC\Routing;
 
 trait RouterTrait
 {

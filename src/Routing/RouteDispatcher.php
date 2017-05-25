@@ -1,5 +1,5 @@
 <?php
-namespace SeanKndy\SMVC;
+namespace SeanKndy\SMVC\Routing;
 
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
@@ -10,12 +10,10 @@ use GuzzleHttp\Psr7\Response;
 class RouteDispatcher implements DelegateInterface
 {
     protected $route;
-    protected $app;
-    protected $params;    
+    protected $params;
 
-    public function __construct(Application $app, Route $route, array $params = []) {
+    public function __construct(Route $route, array $params = []) {
         $this->route = $route;
-        $this->app = $app;
         $this->params = $params;
         return $this;
     }
@@ -42,7 +40,7 @@ class RouteDispatcher implements DelegateInterface
             return $this->stringToResponse($this->dispatchRouteTarget($request));
         } else if (class_exists($middleware)) {
             // run middleware
-            $middleware = new $middleware($this->app);
+            $middleware = new $middleware();
             if ($middleware instanceof MiddlewareInterface) {
                 return $this->stringToResponse($middleware->process($request, $this));
             } else {
@@ -55,7 +53,7 @@ class RouteDispatcher implements DelegateInterface
         $target = $this->route->getTarget();
         if (is_string($target) && strstr($target, '::') !== false) { // assume Controller instance
             list($class, $method) = explode('::', $target);
-            return call_user_func_array([new $class($this->app), $method], [$this->params]);
+            return call_user_func_array([new $class(), $method], [$this->params]);
         } else if (is_callable($target)) {
             $func = $target;
             return $func($request, $this->params);

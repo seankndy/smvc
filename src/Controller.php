@@ -10,10 +10,10 @@ class Controller
     protected $view;
     protected $app;
     
-    public function __construct(Application $app) {
-        $this->app = $app;
+    public function __construct() {
+        $this->app = Application::instance();
         $this->response = new Response();
-        $this->view = new View($this->response, $app->config('view.basePath'));
+        $this->view = new View($this->response);
     }
     
     public function getRequest() {
