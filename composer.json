@@ -1,0 +1,23 @@
+{
+    "name": "seankndy/smvc",
+    "description": "Sean's bare-bones MVC structure",
+    "authors": [
+        {
+            "name": "Sean Kennedy",
+            "email": "sean@kndy.net"
+        }
+    ],
+    "keywords": [
+        "mvc"
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "http-interop/http-middleware": "0.4.1",
+        "guzzlehttp/psr7": "^1.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "SeanKndy\\SMVC\\": "src/"
+        }
+    }
+}
