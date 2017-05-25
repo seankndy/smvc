@@ -21,28 +21,32 @@ class RouteDispatcher implements DelegateInterface
     }
     
     public function dispatch(ServerRequestInterface $request) {
-        $response = $this->stringToResponse($this->process($request));
-        return $response;
+        return $this->stringToResponse($this->process($request));
     }
     
     /*
      * implementation for DelegateInterface
      */
     public function process(ServerRequestInterface $request) {
-        static $middlewareIdx = 0;
-
-        $middleware = $this->route->getMiddleware();
-
-        // end of middleware? launch app.
-        if (!isset($middleware[$middlewareIdx])) {
-            return $this->stringToResponse($this->dispatchRouteTarget($request));
+        static $middlewareArray = null;
+        
+        if (is_null($middlewareArray)) {
+            $middlewareArray = $this->route->getMiddleware();
         }
         
-        $middlewareClass = $middleware[$middlewareIdx++];
-        if (class_exists($middlewareClass)) {
-            $middleware = new $middlewareClass();
+        $middleware = array_shift($middlewareArray);
+        
+        if (is_null($middleware)) {
+            // end of middleware? launch app.
+            $middlewareArray = null;
+            return $this->stringToResponse($this->dispatchRouteTarget($request));
+        } else if (class_exists($middleware)) {
+            // run middleware
+            $middleware = new $middleware($this->app);
             if ($middleware instanceof MiddlewareInterface) {
                 return $this->stringToResponse($middleware->process($request, $this));
+            } else {
+                return $this->process($request);
             }
         }
     }
@@ -60,9 +64,10 @@ class RouteDispatcher implements DelegateInterface
     }
     
     protected function stringToResponse($string) {
-        if (is_string($string))
-            $response = new Response(200, [], $string);
-        else
+        if (is_string($string)) {
+            $response = new Response();
+            $response->getBody()->write($string);
+        } else
             $response = $string;
         return $response;
     }
