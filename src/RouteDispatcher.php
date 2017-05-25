@@ -21,10 +21,7 @@ class RouteDispatcher implements DelegateInterface
     }
     
     public function dispatch(ServerRequestInterface $request) {
-        $response = $this->process($request);
-        if (is_string($response)) {
-            $response = new Response(200, [], $response);
-        }
+        $response = $this->stringToResponse($this->process($request));
         return $response;
     }
     
@@ -38,14 +35,14 @@ class RouteDispatcher implements DelegateInterface
 
         // end of middleware? launch app.
         if (!isset($middleware[$middlewareIdx])) {
-            return $this->dispatchRouteTarget($request);
+            return $this->stringToResponse($this->dispatchRouteTarget($request));
         }
         
         $middlewareClass = $middleware[$middlewareIdx++];
         if (class_exists($middlewareClass)) {
             $middleware = new $middlewareClass();
             if ($middleware instanceof MiddlewareInterface) {
-                return $middleware->process($request, $this);
+                return $this->stringToResponse($middleware->process($request, $this));
             }
         }
     }
@@ -60,5 +57,13 @@ class RouteDispatcher implements DelegateInterface
             return $func($request, $this->params);
         } else
             throw new \Exception("Route could not be dispatched, uncallable!");
+    }
+    
+    protected function stringToResponse($string) {
+        if (is_string($string))
+            $response = new Response(200, [], $string);
+        else
+            $response = $string;
+        return $response;
     }
 }

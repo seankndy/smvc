@@ -4,6 +4,12 @@ namespace SeanKndy\SMVC;
 trait RouterTrait
 {
     protected $routes = [];
+    
+    /*
+     * these are "global" attributes to apply to every route added
+     * they will always be blank within Application, but will be populated
+     * within a RouteGroup
+     */
     protected $routePrefix = '';
     protected $routeMiddleware = [];
     protected $routeHost = '';
