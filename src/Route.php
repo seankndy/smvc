@@ -5,7 +5,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 
-class Route implements \Interop\Http\ServerMiddleware\DelegateInterface
+class Route
 {
     protected $httpMethod;
     protected $routeString;
@@ -14,6 +14,7 @@ class Route implements \Interop\Http\ServerMiddleware\DelegateInterface
     protected $middleware;
     protected $name;
     protected $prefix = '';
+    protected $hostString = '';
 
     public function __construct($httpMethod, $routeString, $target, $defaultParams = [], $middleware = []) {
         $this->setHttpMethod($httpMethod);
@@ -28,6 +29,18 @@ class Route implements \Interop\Http\ServerMiddleware\DelegateInterface
         // if method doesn't match, bail now
         if ($this->httpMethod != 'ANY' && $this->httpMethod != strtoupper($request->getMethod())) {
             return false;
+        }
+        
+        // match on hostname if set, and also extract variables from hostname if provided
+        if ($this->hostString) {
+            $hostRegex = '/^' . preg_replace('/\{(\w+)\}/', '(.+?)', str_replace('.', '\\.', $this->hostString)) . '$/';
+            if (preg_match_all($hostRegex, $request->getUri()->getHost(), $valueMatches)) {
+                if (isset($valueMatches[1]) && preg_match('/\{(\w+)\}/', $this->hostString, $varMatches)) {
+                    array_shift($varMatches);
+                    $params = array_combine($varMatches, $valueMatches[1]);
+                }
+            } else
+                return false;
         }
         
         $routeArray = explode('/', $this->getRouteStringWithPrefix());
@@ -59,47 +72,6 @@ class Route implements \Interop\Http\ServerMiddleware\DelegateInterface
         }
         
         return true;
-    }
-
-    public function dispatch(Application $app, ServerRequestInterface $request, array $params = []) {
-        $response = null;
-        if (is_string($this->target) && strstr($this->target, '::') !== false) { // assume Controller instance
-            list($class, $method) = explode('::', $this->target);
-            $response = call_user_func_array([new $class($app), $method], [$params]);
-        } else if (is_callable($this->target)) {
-            $func = $this->target;
-            $response = $func($request, $params);
-        } else
-            throw new Exception("Could not run target because an invalid target was given.");
-        
-        // if response is a string, convert it to a Response object and assume normal
-        // operation, 200 OK
-        if (is_string($response)) {
-            $response = new Response(200, [], $response);
-        }
-        
-        return $response;
-    }
-    
-    /*
-     * implementation for DelegateInterface
-     */
-    public function process(ServerRequestInterface $request) {
-        static $i = 0;
-
-        if (!isset($this->middleware[$i])) // reached the end
-            return null;
-        $middlewareClass = $this->middleware[$i++];
-        if (class_exists($middlewareClass)) {
-            $middleware = new $middlewareClass();
-            if ($middleware instanceof MiddlewareInterface) {
-                $response = $middleware->process($request, $this);
-            }
-        }
-        if (isset($response) && $response) {
-            return $response;
-        }
-        return null;
     }
     
     public function getName() {
@@ -162,6 +134,10 @@ class Route implements \Interop\Http\ServerMiddleware\DelegateInterface
     
     public function setPrefix($prefix) {
         $this->prefix = $prefix;
+    }
+    
+    public function setHostString($hostString) {
+        $this->hostString = $hostString;
     }
     
     public function generateUrl(array $params = []) {

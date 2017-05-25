@@ -6,11 +6,13 @@ trait RouterTrait
     protected $routes = [];
     protected $routePrefix = '';
     protected $routeMiddleware = [];
+    protected $routeHost = '';
     
     public function route($method, $routeString = null, $target = null) {
         $route = new Route($method, $routeString, $target);
         $route->setPrefix($this->routePrefix);
         $route->setMiddleware($this->routeMiddleware);
+        $route->setHostString($this->routeHost);
         
         $this->routes[] = $route;
         return $route;

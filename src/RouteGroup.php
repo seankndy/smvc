@@ -26,6 +26,9 @@ class RouteGroup
             }
             $this->routeMiddleware = $attributes['middleware'];
         }
+        if (isset($attributes['hostname'])) {
+            $this->routeHost = $attributes['hostname'];
+        }
         $this->attributes = $attributes;
     }
 }
