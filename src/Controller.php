@@ -22,6 +22,12 @@ class Controller
         return $this->app->getRequest();
     }
 
+    public function redirectToRoute($name, array $args = []) {
+        $this->response = new Response(302);
+        $this->response = $this->response->withHeader('Location', $this->app->url($name, $args));
+        return $this->response;
+    }
+
     // used to instantiate models.
     /*
     public function __get($var) {
