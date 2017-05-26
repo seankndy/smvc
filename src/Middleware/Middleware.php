@@ -1,9 +1,11 @@
 <?php
-namespace SeanKndy\SMVC;
+namespace SeanKndy\SMVC\Middleware;
 
 abstract class Middleware implements \Interop\Http\ServerMiddleware\MiddlewareInterface
-{   
+{
+    //protected $app;
+
     public function __construct() {
-        ; // currently no special implementation, just a wrapper
+        ;//$this->app = Application::instance();
     }
 }

@@ -110,7 +110,7 @@ class Form
     }
     
     protected function getDefaultValue($name) {
-        $attributes = $this->request->getAttributes();
+        $attributes = $this->request->getParsedBody();
         if (isset($attributes[$name])) {
             return $attributes[$name];
         }
