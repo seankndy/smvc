@@ -15,6 +15,7 @@ class Application
     protected $request;
     protected $config = [];
     protected $dataValidators = [];
+	protected $session = null;
 
     private function __construct() {
     }
@@ -25,7 +26,7 @@ class Application
         }
         return self::$instance;
     }
-
+	
     public function config($key, $val = null) {
         if ($val === null && isset($this->config[$key])) {
             return $this->config[$key];
@@ -107,8 +108,23 @@ class Application
         }
         return null;
     }
-            
+
+	public function setSession(\SessionHandlerInterface $session) {
+		$this->session = $session;
+	}
+
+    public function getSession() {
+        if (is_null($this->session) && class_exists(Session\BasicHandler::class)) {
+            $this->session = new Session\BasicHandler();
+        }
+        return $this->session;
+    }
+
     public function start() {
+        if ($sess = $this->getSession()) {
+            session_set_save_handler($sess, true);
+            session_start();
+        }
         $this->routeRequest(ServerRequest::fromGlobals());
     }
     

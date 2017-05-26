@@ -9,9 +9,11 @@ class Controller
     protected $response;
     protected $view;
     protected $app;
-    
+    protected $session;
+	
     public function __construct() {
         $this->app = Application::instance();
+		$this->session = $this->app->getSession();
         $this->response = new Response();
         $this->view = new View($this->response);
     }
