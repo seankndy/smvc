@@ -16,6 +16,7 @@ class Application
     protected $config = [];
     protected $dataValidators = [];
     protected $session = null;
+    protected $csrfProtectionManager = null;
 
     private function __construct() {
     }
@@ -123,10 +124,17 @@ class Application
         return $this->session;
     }
 
+    public function getCsrfProtectionManager() {
+        return $this->csrfProtectionManager;
+    }
+
     public function start() {
         if ($sess = $this->getSession()) {
             session_set_save_handler($sess, true);
             session_start();
+
+            $this->csrfProtectionManager = new Session\CsrfProtectionManager($sess,
+                $this->config('request.csrf_token_name') ? $this->config('request.csrf_token_name') : '_csrf_token');
         }
         $this->routeRequest(ServerRequest::fromGlobals());
     }

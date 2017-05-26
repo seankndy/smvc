@@ -17,14 +17,18 @@ class Form
         $this->request = $req;
         $this->view = $v;
     }
-    
+
     public function create($name, $method = 'post', $class = '') {
-        return '<form id="form_' . $name .'" method="' . $method . '" action="' . 
+        return '<form id="form_' . $name .'" method="' . $method . '" action="' .
             $this->request->getUri()->getPath() . '"' . ($class ? ' class="' . $class . '"' : '') . '>';
     }
-    
+
+    public function csrfHidden() {
+        return $this->view->getApplication()->getCsrfProtectionManager()->generateHiddenInput();
+    }
+
     public function text($name, array $ops = []) {
-        $html = '<input type="' . (isset($ops['password']) ? 'password' : 'text') . '" name="' . $name . '" id="' . 
+        $html = '<input type="' . (isset($ops['password']) ? 'password' : 'text') . '" name="' . $name . '" id="' .
             $name . '" value="' . $this->getDefaultValue($name) . '"';
         if (isset($ops['size'])) $html .= ' size="' . $ops['size'] . '"';
         if (isset($ops['maxlength'])) $html .= ' maxlength="' . $ops['maxlength'] . '"';
@@ -32,7 +36,7 @@ class Form
         $html .= '>';
         return $html;
     }
-    
+
     public function password($name, array $ops = []) {
         return $this->text($name, array_merge($ops, ['password' => true]));
     }
@@ -66,7 +70,7 @@ class Form
         if (!$items) {
             $items = $this->findItemsInView($name);
         }
-    
+
         $html = '<select name="' . $name . '" id="' . $name . '">';
         foreach ($items as $k => $v) {
             $val = isset($ops['use_keys']) ? $k : $v;
@@ -78,11 +82,11 @@ class Form
         $html .= '</select>';
         return $html;
     }
-    
+
     public function submit($value, $name = null) {
         return '<input type="submit" ' . ($name ? 'name="' . $name . '"' : '') . 'value="' . $value . '">';
     }
-    
+
     public function end($btnVal = null) {
         $html = '';
         if ($btnVal) {
@@ -91,7 +95,7 @@ class Form
         $html .= '</form>';
         return $html;
     }
-    
+
     protected function findItemsInView($name) {
         // if name is something like 'category_id', then try to find the array 'categories' set in the View
         if (substr($name, -3) == '_id') {
@@ -108,7 +112,7 @@ class Form
         }
         return [];
     }
-    
+
     protected function getDefaultValue($name) {
         $attributes = $this->request->getParsedBody();
         if (isset($attributes[$name])) {

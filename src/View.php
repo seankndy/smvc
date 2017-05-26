@@ -65,6 +65,10 @@ class View
         return $this->get($name);
     }
 
+    public function getApplication() {
+        return $this->app;
+    }
+
     public function setRenderHeaderFooter($renderHeaderFooter) {
         $this->renderHeaderFooter = $renderHeaderFooter;
         return $this;
@@ -73,7 +77,7 @@ class View
     protected function renderFile($file, $vars = []) {
         if (file_exists($file)) {
             ob_start();
-            
+
             $_form = new Form($this, $this->app->getRequest());
             extract($vars ? $vars : $this->vars);
             extract(self::$globalVars);
