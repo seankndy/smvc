@@ -33,4 +33,8 @@ class BasicHandler extends \SessionHandler
     public function __get($var) {
         return $this->get($var);
     }
+
+    public function __isset($var) {
+        return isset($_SESSION[$var]);
+    }
 }

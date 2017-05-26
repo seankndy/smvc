@@ -23,6 +23,7 @@ class View
         if (substr($viewName, 0, 1) == '/')
             $viewName = substr($viewName, 1);
         $file = $this->basePath . $viewName . '.php';
+
         if ($this->renderHeaderFooter) {
             $this->renderFile($this->basePath . 'header.php', $vars);
             $this->renderFile($file, $vars);
@@ -49,6 +50,10 @@ class View
     public function get($var) {
         return isset($this->vars[$var]) ? $this->vars[$var] : '';
     }
+
+    public function __isset($var) {
+        return isset($this->vars[$var]);
+    }
     
     public function __set($name, $value) {
         $this->assign($name, $value);
@@ -66,6 +71,7 @@ class View
     protected function renderFile($file, $vars = []) {
         if (file_exists($file)) {
             ob_start();
+            $_form = new Form($this, (Application::instance())->getRequest());
             extract($vars ? $vars : $this->vars);
             extract(self::$globalVars);
             include($file);

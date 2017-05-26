@@ -60,8 +60,11 @@ class Application
     }
 
     protected function outputResponse(ResponseInterface $response) {
-        foreach ($response->getHeaders() as $key => $val) {
-            header("$key: $val", false);
+        foreach ($response->getHeaders() as $key => $vals) {
+            if (!is_array($vals)) $vals = [$vals];
+			foreach ($vals as $val) {
+	            header("$key: $val", false);
+            }
         }
         if ($response->hasHeader('Location')) {
             exit; // if Location header present, don't allow body to be display and exit now for security reasons.
