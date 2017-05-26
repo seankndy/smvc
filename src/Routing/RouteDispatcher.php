@@ -9,38 +9,40 @@ use GuzzleHttp\Psr7\Response;
 
 class RouteDispatcher implements DelegateInterface
 {
+    protected $app;
     protected $route;
     protected $params;
 
-    public function __construct(Route $route, array $params = []) {
+    public function __construct(\SeanKndy\SMVC\Application $app, Route $route, array $params = []) {
+        $this->app = $app;
         $this->route = $route;
         $this->params = $params;
         return $this;
     }
-    
+
     public function dispatch(ServerRequestInterface $request) {
         return $this->stringToResponse($this->process($request));
     }
-    
+
     /*
      * implementation for DelegateInterface
      */
     public function process(ServerRequestInterface $request) {
         static $middlewareArray = null;
-        
+
         if (is_null($middlewareArray)) {
             $middlewareArray = $this->route->getMiddleware();
         }
-        
+
         $middleware = array_shift($middlewareArray);
-        
+
         if (is_null($middleware)) {
             // end of middleware? launch app.
             $middlewareArray = null;
             return $this->stringToResponse($this->dispatchRouteTarget($request));
         } else if (class_exists($middleware)) {
             // run middleware
-            $middleware = new $middleware();
+            $middleware = new $middleware($this->app);
             if ($middleware instanceof MiddlewareInterface) {
                 return $this->stringToResponse($middleware->process($request, $this));
             } else {
@@ -48,19 +50,19 @@ class RouteDispatcher implements DelegateInterface
             }
         }
     }
-    
+
     protected function dispatchRouteTarget(ServerRequestInterface $request) {
         $target = $this->route->getTarget();
         if (is_string($target) && strstr($target, '::') !== false) { // assume Controller instance
             list($class, $method) = explode('::', $target);
-            return call_user_func_array([new $class(), $method], [$this->params]);
+            return call_user_func_array([new $class($this->app), $method], [$this->params]);
         } else if (is_callable($target)) {
             $func = $target;
             return $func($request, $this->params);
         } else
             throw new \Exception("Route could not be dispatched, uncallable!");
     }
-    
+
     protected function stringToResponse($string) {
         if (is_string($string)) {
             $response = new Response();

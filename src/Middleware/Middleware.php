@@ -3,9 +3,9 @@ namespace SeanKndy\SMVC\Middleware;
 
 abstract class Middleware implements \Interop\Http\ServerMiddleware\MiddlewareInterface
 {
-    //protected $app;
+    protected $app;
 
-    public function __construct() {
-        ;//$this->app = Application::instance();
+    public function __construct(\SeanKndy\SMVC\Application $app) {
+        $this->app = $app;
     }
 }

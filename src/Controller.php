@@ -10,18 +10,18 @@ class Controller
     protected $view;
     protected $app;
     protected $session;
-	
-    public function __construct() {
-        $this->app = Application::instance();
+
+    public function __construct(Application $app) {
+        $this->app = $app;
 		$this->session = $this->app->getSession();
         $this->response = new Response();
-        $this->view = new View($this->response);
+        $this->view = new View($this->app, $this->response);
     }
-    
+
     public function getRequest() {
         return $this->app->getRequest();
     }
-    
+
     // used to instantiate models.
     /*
     public function __get($var) {
