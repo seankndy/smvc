@@ -59,12 +59,16 @@ class CsrfProtectionManager
         }
     }
 
+    public function getToken() {
+        return $this->token;
+    }
+
     protected function generateToken() {
-        if (function_exists('random_bytes')) {
+        if (function_exists('\random_bytes')) {
             return bin2hex(random_bytes(32));
-        } else if (function_exists('mcrypt_create_iv')) {
+        } else if (function_exists('\mcrypt_create_iv')) {
             return bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
-        } else if (function_exists('openssl_random_pseudo_byte')) {
+        } else if (function_exists('\openssl_random_pseudo_byte')) {
             return bin2hex(openssl_random_pseudo_bytes(32));
         } else {
             return md5(uniqid(rand(), true));
