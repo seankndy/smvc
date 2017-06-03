@@ -78,7 +78,7 @@ class View
         if (file_exists($file)) {
             ob_start();
 
-            $_form = new Form($this, $this->app->getRequest());
+            $_form = new Form\Form($this, $this->app->getRequest());
             extract($vars ? $vars : $this->vars);
             extract(self::$globalVars);
 

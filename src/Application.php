@@ -83,9 +83,10 @@ class Application
         $this->outputResponse($response);
     }
 
-    public function group(array $attributes, \Closure $callback) {
+    public function group(array $attributes, \Closure $cls) {
         $grp = new Routing\RouteGroup($attributes);
-        $callback($grp);
+        $cls = $cls->bindTo($grp);
+        $cls();
         $this->routes = array_merge($this->routes, $grp->getRoutes());
     }
 

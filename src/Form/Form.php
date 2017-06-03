@@ -1,7 +1,8 @@
 <?php
-namespace SeanKndy\SMVC;
+namespace SeanKndy\SMVC\Form;
 
 use Psr\Http\Message\ServerRequestInterface;
+use SeanKndy\SMVC\View;
 
 /*
  * Basic helper class to simplify building HTML form inputs.
@@ -24,7 +25,7 @@ class Form
     }
 
     public function csrfHidden() {
-        return $this->view->getApplication()->getCsrfProtectionManager()->generateHiddenInput();
+        return '<input type="hidden" name="' . $this->view->getApplication()->getCsrfProtectionManager()->getTokenName() . '" value="' . $this->view->getApplication()->getCsrfProtectionManager()->getToken() . '">';
     }
 
     public function text($name, array $ops = []) {

@@ -39,10 +39,6 @@ class CsrfProtectionManager
         return true;
     }
 
-    public function generateHiddenInput() {
-        return '<input type="hidden" name="' . $this->tokenName . '" value="' . $this->token . '">';
-    }
-
     public function tokensMatch($str1, $str2) {
         if (function_exists('\hash_equals')) {
             return \hash_equals($str1, $str2);
@@ -61,6 +57,10 @@ class CsrfProtectionManager
 
     public function getToken() {
         return $this->token;
+    }
+
+    public function getTokenName() {
+        return $this->tokenName;
     }
 
     protected function generateToken() {
