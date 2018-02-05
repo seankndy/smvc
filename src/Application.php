@@ -16,7 +16,6 @@ class Application
     protected $config = [];
     protected $dataValidators = [];
     protected $session = null;
-    protected $csrfProtectionManager = null;
 
     private function __construct() {
     }
@@ -85,7 +84,9 @@ class Application
 
     public function group(array $attributes, \Closure $callback) {
         $grp = new Routing\RouteGroup($attributes);
-        $callback($grp);
+        $callback = $callback->bindTo($grp);
+        $callback();
+
         $this->routes = array_merge($this->routes, $grp->getRoutes());
     }
 
@@ -99,20 +100,6 @@ class Application
         return false;
     }
 
-    public function setDataValidators(array $validators) {
-        $this->dataValidators = $validators;
-        return $this;
-    }
-
-    public function getDataValidator($name) {
-        foreach ($this->dataValidators as $validatorClass) {
-            if ($name == call_user_func($validatorClass . '::name')) {
-                return new $validatorClass();
-            }
-        }
-        return null;
-    }
-
     public function setSession(\SessionHandlerInterface $session) {
         $this->session = $session;
     }
@@ -124,17 +111,10 @@ class Application
         return $this->session;
     }
 
-    public function getCsrfProtectionManager() {
-        return $this->csrfProtectionManager;
-    }
-
     public function start() {
         if ($sess = $this->getSession()) {
             session_set_save_handler($sess, true);
             session_start();
-
-            $this->csrfProtectionManager = new Session\CsrfProtectionManager($sess,
-                $this->config('request.csrf_token_name') ? $this->config('request.csrf_token_name') : '_csrf_token');
         }
         $this->routeRequest(ServerRequest::fromGlobals());
     }

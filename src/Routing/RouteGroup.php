@@ -4,7 +4,7 @@ namespace SeanKndy\SMVC\Routing;
 class RouteGroup
 {
     use RouterTrait;
-    
+
     protected $attributes;
 
     public function __construct(array $attributes) {
@@ -14,10 +14,13 @@ class RouteGroup
 
     public function setAttributes(array $attributes) {
         /*
-         * only 2 attributes supported at this time
+         * only 4 attributes supported at this time
          */
         if (isset($attributes['prefix'])) {
             $this->routePrefix = $attributes['prefix'];
+        }
+        if (isset($attributes['namespacePrefix'])) {
+            $this->targetNamespacePrefix = $attributes['namespacePrefix'];
         }
         if (isset($attributes['middleware'])) {
             if (!is_array($attributes['middleware'])) {

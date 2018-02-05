@@ -4,9 +4,72 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "381d67fa4f6a786f95cd9e8264f6cf3b",
-    "content-hash": "f0d404539ca39612e1e28f70186c741f",
+    "content-hash": "20bbc6a49bf8361c4ef269a16379018e",
     "packages": [
+        {
+            "name": "aura/sqlquery",
+            "version": "2.7.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/auraphp/Aura.SqlQuery.git",
+                "reference": "dd81b57aeb43628180a9c70a4df58d872024d7f2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/auraphp/Aura.SqlQuery/zipball/dd81b57aeb43628180a9c70a4df58d872024d7f2",
+                "reference": "dd81b57aeb43628180a9c70a4df58d872024d7f2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "suggest": {
+                "aura/sql": "Provides an extension to the native PDO along with a profiler and connection locator. Use version 2.*."
+            },
+            "type": "library",
+            "extra": {
+                "aura": {
+                    "type": "library"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Aura\\SqlQuery\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Aura.SqlQuery Contributors",
+                    "homepage": "https://github.com/auraphp/Aura.SqlQuery/contributors"
+                }
+            ],
+            "description": "Object-oriented query builders for MySQL, Postgres, SQLite, and SQLServer; can be used with any database connection library.",
+            "homepage": "https://github.com/auraphp/Aura.SqlQuery",
+            "keywords": [
+                "database",
+                "db",
+                "delete",
+                "dml",
+                "insert",
+                "mysql",
+                "pdo",
+                "pgsql",
+                "postgres",
+                "postgresql",
+                "query",
+                "select",
+                "sql",
+                "sql server",
+                "sqlite",
+                "sqlserver",
+                "update"
+            ],
+            "time": "2016-10-03T20:34:56+00:00"
+        },
         {
             "name": "guzzlehttp/psr7",
             "version": "1.4.2",
@@ -70,25 +133,24 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-03-20 17:10:46"
+            "time": "2017-03-20T17:10:46+00:00"
         },
         {
-            "name": "http-interop/http-middleware",
-            "version": "0.4.1",
+            "name": "psr/container",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/http-interop/http-middleware.git",
-                "reference": "9a801fe60e70d5d608b61d56b2dcde29516c81b9"
+                "url": "https://github.com/php-fig/container.git",
+                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/http-interop/http-middleware/zipball/9a801fe60e70d5d608b61d56b2dcde29516c81b9",
-                "reference": "9a801fe60e70d5d608b61d56b2dcde29516c81b9",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0",
-                "psr/http-message": "^1.0"
+                "php": ">=5.3.0"
             },
             "type": "library",
             "extra": {
@@ -98,7 +160,7 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Interop\\Http\\ServerMiddleware\\": "src/"
+                    "Psr\\Container\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -111,18 +173,16 @@
                     "homepage": "http://www.php-fig.org/"
                 }
             ],
-            "description": "Common interface for HTTP server-side middleware",
+            "description": "Common Container Interface (PHP FIG PSR-11)",
+            "homepage": "https://github.com/php-fig/container",
             "keywords": [
-                "factory",
-                "http",
-                "middleware",
-                "psr",
-                "psr-17",
-                "psr-7",
-                "request",
-                "response"
+                "PSR-11",
+                "container",
+                "container-interface",
+                "container-interop",
+                "psr"
             ],
-            "time": "2017-01-14 15:23:42"
+            "time": "2017-02-14T16:28:37+00:00"
         },
         {
             "name": "psr/http-message",
@@ -172,7 +232,113 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
+        },
+        {
+            "name": "psr/http-server-handler",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-server-handler.git",
+                "reference": "439d92054dc06097f2406ec074a2627839955a02"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-server-handler/zipball/439d92054dc06097f2406ec074a2627839955a02",
+                "reference": "439d92054dc06097f2406ec074a2627839955a02",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0",
+                "psr/http-message": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Server\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP server-side request handler",
+            "keywords": [
+                "handler",
+                "http",
+                "http-interop",
+                "psr",
+                "psr-15",
+                "psr-7",
+                "request",
+                "response",
+                "server"
+            ],
+            "time": "2018-01-22T17:04:15+00:00"
+        },
+        {
+            "name": "psr/http-server-middleware",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-server-middleware.git",
+                "reference": "ea17eb1fb2c8df6db919cc578451a8013c6a0ae5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-server-middleware/zipball/ea17eb1fb2c8df6db919cc578451a8013c6a0ae5",
+                "reference": "ea17eb1fb2c8df6db919cc578451a8013c6a0ae5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0",
+                "psr/http-message": "^1.0",
+                "psr/http-server-handler": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Server\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP server-side middleware",
+            "keywords": [
+                "http",
+                "http-interop",
+                "middleware",
+                "psr",
+                "psr-15",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "time": "2018-01-22T17:08:31+00:00"
         }
     ],
     "packages-dev": [],
@@ -182,7 +348,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.4.0"
+        "php": ">=5.6.0"
     },
     "platform-dev": []
 }

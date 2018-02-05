@@ -11,6 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class Form
 {
     private $request;
+    private $model;
     private $view;
 
     public function __construct(View $v, ServerRequestInterface $req) {
@@ -23,8 +24,11 @@ class Form
             $this->request->getUri()->getPath() . '"' . ($class ? ' class="' . $class . '"' : '') . '>';
     }
 
-    public function csrfHidden() {
-        return $this->view->getApplication()->getCsrfProtectionManager()->generateHiddenInput();
+    public function csrf() {
+        if ($middlewarecls = Application::instance()->config('middleware.csrf')) {
+            $csrf = new $middlewarecls();
+            return '<input type="hidden" name="' . $csrf->getTokenName() . '" value="' . $csrf->getToken() . '">';
+        }
     }
 
     public function text($name, array $ops = []) {

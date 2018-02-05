@@ -4,7 +4,7 @@ namespace SeanKndy\SMVC\Routing;
 trait RouterTrait
 {
     protected $routes = [];
-    
+
     /*
      * these are "global" attributes to apply to every route added
      * they will always be blank within Application, but will be populated
@@ -13,17 +13,21 @@ trait RouterTrait
     protected $routePrefix = '';
     protected $routeMiddleware = [];
     protected $routeHost = '';
-    
+    protected $targetNamespacePrefix = '';
+
     public function route($method, $routeString = null, $target = null) {
         $route = new Route($method, $routeString, $target);
+        // these attributes would be populated from a RouteGroup instance
+        // that is using this trait
         $route->setPrefix($this->routePrefix);
         $route->setMiddleware($this->routeMiddleware);
         $route->setHostString($this->routeHost);
-        
+        $route->setTargetNamespacePrefix($this->targetNamespacePrefix);
+
         $this->routes[] = $route;
         return $route;
     }
-    
+
     public function get($routeString, $target) {
         return $this->route('GET', $routeString, $target);
     }
@@ -43,9 +47,8 @@ trait RouterTrait
     public function any($routeString, $target) {
         return $this->route('ANY', $routeString, $target);
     }
-    
+
     public function getRoutes() {
         return $this->routes;
     }
 }
-

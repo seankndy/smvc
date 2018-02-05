@@ -1,11 +1,9 @@
 <?php
 namespace SeanKndy\SMVC\Middleware;
 
-abstract class Middleware implements \Interop\Http\ServerMiddleware\MiddlewareInterface
+abstract class Middleware implements \Psr\Http\Server\MiddlewareInterface
 {
-    protected $app;
-
-    public function __construct(\SeanKndy\SMVC\Application $app) {
-        $this->app = $app;
-    }
+    /*
+     * extenders must implement \Psr\Http\Server\MiddlewareInterface
+     */
 }

@@ -14,6 +14,7 @@ class Route
     protected $middleware;
     protected $name;
     protected $prefix = '';
+    protected $targetNamespacePrefix = '';
     protected $hostString = '';
 
     public function __construct($httpMethod, $routeString, $target, $defaultParams = [], $middleware = []) {
@@ -30,7 +31,7 @@ class Route
         if ($this->httpMethod != 'ANY' && $this->httpMethod != strtoupper($request->getMethod())) {
             return false;
         }
-        
+
         // match on hostname if set, and also extract variables from hostname if provided
         if ($this->hostString) {
             $hostRegex = '/^' . preg_replace('/\{(\w+)\}/', '(.+?)', str_replace('.', '\\.', $this->hostString)) . '$/';
@@ -42,11 +43,11 @@ class Route
             } else
                 return false;
         }
-        
+
         $routeArray = explode('/', $this->getRouteStringWithPrefix());
         $pathString = trim($request->getUri()->getPath(), '/');
         $pathArray = explode('/', $pathString);
-        
+
         // compare $pathArray to $routeArray, item by item
         foreach ($pathArray as $k => $pathItem) {
             if (!isset($routeArray[$k]))
@@ -55,7 +56,7 @@ class Route
             $defaultValue = '';
             if (preg_match('/^\{(\w+\??)\}$/', $routeItem, $m)) { // if variable (defined by word within curly brackets)
                 $variable = $m[1];
-                
+
                 if (substr($variable, -1) == '?') { // optional flag (?) specified
                     $variable = substr($variable, 0, -1); // hack '?' off end
                     $params[$variable] = (!$pathItem ? (isset($this->defaultParams[$variable]) ? $defaultValue : '') : $pathItem);
@@ -70,14 +71,14 @@ class Route
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
     public function getName() {
         return $this->name;
     }
-     
+
     public function setName($name) {
         $this->name = $name;
         return $this;
@@ -95,7 +96,7 @@ class Route
     public function getRouteString() {
         return $this->routeString;
     }
-    
+
     public function getRouteStringWithPrefix() {
         return $this->prefix . $this->routeString;
     }
@@ -131,17 +132,30 @@ class Route
         $this->middleware = $middleware;
         return $this;
     }
-    
+
+    public function addMiddleware(SeanKndy\SMVC\Middleware\Middleware $middleware) {
+        $this->middleware[] = $middleware;
+        return $this;
+    }
+
     public function setPrefix($prefix) {
         $this->prefix = $prefix;
     }
-    
+
+    public function setTargetNamespacePrefix($prefix) {
+        $this->targetNamespacePrefix = $prefix;
+    }
+
+    public function getTargetNamespacePrefix() {
+        return $this->targetNamespacePrefix;
+    }
+
     public function setHostString($hostString) {
         $this->hostString = $hostString;
     }
-    
+
     public function generateUrl(array $params = []) {
-        $url = $this->getRouteStringWithPrefix();
+        $url = '/' . $this->getRouteStringWithPrefix();
         foreach ($params as $k => $v) {
             $url = preg_replace('/\{' . preg_quote($k) . '\??\}/', $v, $url);
         }

@@ -88,6 +88,6 @@ class View
             ob_end_clean();
             $this->response->getBody()->write($output);
         } else
-            throw new \Exception("renderFile(): failed to locate view @ $file");
+            throw new \RuntimeException("renderFile(): failed to locate view @ $file");
     }
 }
